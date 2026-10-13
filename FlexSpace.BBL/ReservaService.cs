@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using FlexSpace.DAL;
 
-
 namespace FlexSpace.BLL
 {
     public class ReservaService
@@ -30,12 +29,18 @@ namespace FlexSpace.BLL
         public decimal CalcularTarifa(Cliente cliente, Puesto puesto, DateTime inicio, DateTime fin)
         {
             double totalHoras = (fin - inicio).TotalHours;
-
             decimal subtotalBase = puesto.TarifaBasePorHora * (decimal)totalHoras;
 
             if (cliente.SancionesActivas > 0)
             {
-                return subtotalBase * 1.20m;
+                decimal montoConSancion = subtotalBase * 1.20m;
+
+                if (IncluyeFinDeSemana(inicio, fin))
+                {
+                    montoConSancion += subtotalBase * 0.15m;
+                }
+
+                return montoConSancion;
             }
 
             decimal acumulado = subtotalBase;

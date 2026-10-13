@@ -16,7 +16,6 @@ namespace FlexSpace.UI
             while (!salir)
             {
                 Console.Clear();
-                Console.WriteLine("");
                 Console.WriteLine("Sistema de Gestion FlexSpace");
                 Console.WriteLine("");
                 Console.WriteLine("1. Registrar Nueva Reserva");
@@ -24,7 +23,6 @@ namespace FlexSpace.UI
                 Console.WriteLine("3. Consultar Reservas Activas por Puesto");
                 Console.WriteLine("4. Listar Clientes Sancionados");
                 Console.WriteLine("5. Salir");
-                Console.WriteLine("");
                 Console.Write("Seleccione una opción: ");
 
                 string opcion = Console.ReadLine() ?? string.Empty;
@@ -88,27 +86,32 @@ namespace FlexSpace.UI
                     return;
                 }
 
-                Console.Write("Fecha Inicio (yyyy-MM-dd HH:mm): ");
+                Console.Write("Fecha y Hora Inicio (yyyy-MM-dd HH:mm): ");
                 if (!DateTime.TryParse(Console.ReadLine(), out DateTime inicio))
                 {
-                    Pausar("Formato de fecha de inicio inválido.");
+                    Pausar("Formato de fecha u hora de inicio inválido.");
                     return;
                 }
 
-                Console.Write("Fecha Fin (yyyy-MM-dd HH:mm): ");
+                Console.Write("Fecha y Hora Fin (yyyy-MM-dd HH:mm): ");
                 if (!DateTime.TryParse(Console.ReadLine(), out DateTime fin))
                 {
-                    Pausar("Formato de fecha de fin inválido.");
+                    Pausar("Formato de fecha u hora de fin inválido.");
+                    return;
+                }
+
+                if (fin <= inicio)
+                {
+                    Pausar("La fecha y hora de fin debe ser posterior a la fecha de inicio.");
                     return;
                 }
 
                 decimal tarifa = _servicio.CalcularTarifa(cliente, puesto, inicio, fin);
 
-                Console.WriteLine("");
-                Console.WriteLine("Resumen Previo de la Reserva");
+                Console.WriteLine("\nResumen Previo de la Reserva");
                 Console.WriteLine($"Cliente: {cliente.Nombre} ({cliente.TipoCliente})");
                 Console.WriteLine($"Puesto: {puesto.Codigo} - {puesto.TipoPuesto}");
-                Console.WriteLine($"Inicio: {inicio:g} | Fin: {fin:g}");
+                Console.WriteLine($"Inicio: {inicio:yyyy-MM-dd HH:mm} | Fin: {fin:yyyy-MM-dd HH:mm}");
                 Console.WriteLine($"Costo Total Calculado: ${tarifa:N2}");
                 Console.WriteLine("");
                 Console.Write("¿Desea confirmar y guardar la reserva? (si/no): ");
@@ -116,7 +119,7 @@ namespace FlexSpace.UI
                 if ((Console.ReadLine() ?? "").Equals("S", StringComparison.OrdinalIgnoreCase))
                 {
                     Reserva r = _servicio.RegistrarReserva(cliente, puesto, inicio, fin);
-                    Pausar($"Reserva guardada exitosamente ID Generado: {r.Id}");
+                    Pausar($"Reserva guardada exitosamente. ID Generado: {r.Id}");
                 }
                 else
                 {

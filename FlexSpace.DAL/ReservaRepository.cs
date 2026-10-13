@@ -6,7 +6,7 @@ namespace FlexSpace.DAL
 {
     public class ReservaRepository
     {
-        private readonly string _connectionString = "Server=localhost;Database=flexspacedb;Uid=root;Pwd=;";
+        private readonly string _connectionString = "Server=localhost;Database=flexspacedb;Port=3306;Uid=root;Pwd=;";
 
         public Cliente ObtenerClientePorId(int id)
         {
